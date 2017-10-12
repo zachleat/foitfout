@@ -4,9 +4,31 @@
 body {
 	max-width: 64em; /* 1024px /16 */
 	margin: 0 auto;
+	padding: 0 1em;
 }
 p {
 	margin-top: 0;
+}
+.sr-only {
+	position: absolute;
+	height: 1px;
+	width: 1px; 
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+}
+.cf:before,
+.cf:after {
+	content: " ";
+	display: table;
+}
+.cf:after {
+	clear: both;
+}
+
+/* Forms */
+form {
+	border: 1px solid #dedede;
+	padding: 1em;
 }
 input[readonly],
 input[disabled] {
@@ -21,27 +43,15 @@ label {
 fieldset {
 	border: none;
 	padding: 0;
-	padding-left: 7em;
-	position: relative;
-}
-label,
-fieldset {
-	margin: 0.5rem 0; /* 8px /16 */
 }
 label:first-child {
-	width: 12em;
+	width: 6.5em; /* 104px /16 */
 	text-align: right;
 	padding-right: .5em;
 }
 label,
-fieldset legend,
 button {
 	font-size: 1.125em; /* 18px /16 */
-}
-fieldset legend {
-	position: absolute;
-	left: 0;
-	top: 1px;
 }
 fieldset label {
 	display: inline-block;
@@ -52,15 +62,31 @@ input[type=number] {
 	font-size: 1em;
 	width: 5em;
 }
-button[type=button],
-button[type=submit] {
-	float: left;
-	clear: both;
+button,
+.buttons label {
 	margin-top: 0.2222222222222em; /* 4px /18 */
-	margin-left: 12.22222222222em; /* 220px /18 */
 }
 button[type=submit] {
-	margin-top: 0.7777777777778em; /* 14px /18 */
+	margin-top: 0.8888888888889em; /* 16px /18 */
+	font-weight: 700;
+}
+@media ( max-width: 36.8125em ) { /* 589px */
+	.buttons {
+		margin: 1em auto 0;
+		padding-top: 1em;
+		border-top: 1px solid #dedede;
+	}
+}
+@media ( min-width: 36.875em ) { /* 590px */
+	fieldset {
+		float: left;
+	}
+	.buttons {
+		float: left;
+		margin-left: 2em;
+		padding-left: 1em;
+		border-left: 1px solid #dedede;
+	}
 }
 
 .js .warning {

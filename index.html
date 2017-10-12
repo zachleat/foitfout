@@ -3,35 +3,39 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>FOIT vs FOUT, Open Sans</title>
+	<title>FOIT vs. FOUT</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
 	<link rel="stylesheet" href="foitfout.css">
 	<script src="foitfout.js"></script>
 </head>
 <body>
-	<form id="timeout">
+	<h1>FOIT vs. FOUT (Open Sans)</h1>
+	<form id="timeout" class="cf">
 		<p class="warning">Due to the dynamic nature of this demonstration, this page requires JavaScript.</p>
 		<fieldset>
-			<legend>Web fonts:</legend>
+			<legend class="sr-only">Web fonts:</legend>
 			<div>
-				<label><!-- <input type="checkbox" checked readonly disabled> --> Open Sans Roman</label>
+				<label><!-- <input type="checkbox" checked readonly disabled> -->Roman</label>
 				<label><input type="number" id="loadtime-roman" value="4000" step="100">ms</label>
 			</div>
 			<div>
-				<label><!-- <input type="checkbox" checked readonly disabled> --> Open Sans Bold</label>
+				<label><!-- <input type="checkbox" checked readonly disabled> -->Bold</label>
 				<label><input type="number" id="loadtime-bold" value="4000" step="100">ms</label>
 			</div>
 			<div>
-				<label><!-- <input type="checkbox" checked readonly disabled> --> Open Sans Italic</label>
+				<label><!-- <input type="checkbox" checked readonly disabled> -->Italic</label>
 				<label><input type="number" id="loadtime-italic" value="4000" step="100">ms</label>
 			</div>
 			<div>
-				<label><!-- <input type="checkbox" checked readonly disabled> --> Open Sans Bold Italic</label>
+				<label><!-- <input type="checkbox" checked readonly disabled> -->Bold Italic</label>
 				<label><input type="number" id="loadtime-bolditalic" value="4000" step="100">ms</label>
 			</div>
-			<button type="button" id="randomize">Randomize Load Times</button>
-			<button type="submit" id="startload">Start Font Load</button>
 		</fieldset>
+		<div class="buttons cf">
+			<button type="button" id="randomize">Randomize Load Times</button>
+			<label><input type="checkbox" id="groupedrepaints"> Grouped Repaint</label>
+			<button type="submit" id="startload">Start Font Load</button>
+		</div>
 	</form>
 	<div class="ff-card-pair">
 		<div class="ff-card-panel">
