@@ -5,8 +5,7 @@
 
 		FoitFout.config = {
 			delayBeforeFinish: 800,
-			foitTimeout: 3000,
-			pairs: 1
+			foitTimeout: 3000
 		};
 
 		FoitFout.classes = {
@@ -41,6 +40,16 @@
 			this.foutCard = document.getElementById( "card1-fout" );
 			this.foitRepaints = this.foitCard.previousElementSibling.querySelector( ".ff-card-repaints" );
 			this.foutRepaints = this.foutCard.previousElementSibling.querySelector( ".ff-card-repaints" );
+
+			this.randomizeButton = document.getElementById( "randomize" );
+			this.submitButton = document.getElementById( "startload" );
+
+			this.loadTimeInputs = {
+				roman: document.getElementById( "loadtime-roman" ),
+				bold: document.getElementById( "loadtime-bold" ),
+				italic: document.getElementById( "loadtime-italic" ),
+				bolditalic: document.getElementById( "loadtime-bolditalic" )
+			};
 		};
 
 		FoitFout.prototype.reset = function() {
@@ -50,7 +59,8 @@
 			this.foitRepaintCount = 0;
 			this.foutReflowCount = 0;
 			this.foutRepaintCount = 0;
-
+			this.foitGroup = false;
+			this.foutGroup = false;
 			this.updateCounters();
 
 			// Add both fallback and foit classes to FOIT card (fallback shows after 3s)
@@ -64,7 +74,7 @@
 		};
 
 		FoitFout.prototype.findLoadTime = function( variant ) {
-			var loadtimeEl = document.getElementById( "loadtime-" + variant );
+			var loadtimeEl = this.loadTimeInputs[ variant ];
 			var loadtime = loadtimeEl ? loadtimeEl.valueAsNumber : null;
 
 			if( !loadtime ) {
@@ -76,6 +86,30 @@
 
 		FoitFout.prototype.findMaxLoadTime = function() {
 			return Math.max( this.findLoadTime( "roman" ), this.findLoadTime( "bold" ), this.findLoadTime( "italic" ), this.findLoadTime( "bolditalic" ) );
+		};
+
+		FoitFout.prototype._incrementCounters = function( foitRepaint, foitReflow, foutRepaint, foutReflow ) {
+			var repaintGroupForMs = 100;
+
+			if( !this.foitGroup && ( foitRepaint || foitReflow ) ) {
+				this.foitRepaintCount += foitRepaint;
+				this.foitReflowCount += foitReflow;
+
+				this.foitGroup = true;
+				window.setTimeout(function() {
+					this.foitGroup = false;
+				}.bind( this ), repaintGroupForMs);
+			}
+
+			if( !this.foutGroup && ( foutRepaint || foutReflow ) ) {
+				this.foutRepaintCount += foutRepaint;
+				this.foutReflowCount += foutReflow;
+
+				this.foutGroup = true;
+				window.setTimeout(function() {
+					this.foutGroup = false;
+				}.bind( this ), repaintGroupForMs);
+			}
 		};
 
 		FoitFout.prototype.updateCounters = function() {
@@ -113,23 +147,21 @@
 				window.setTimeout(function() {
 					this.foitCard.classList.remove( fallbackClass, foitClass );
 
-					this.foitRepaintCount++;
-					this.foitReflowCount++;
+					this._incrementCounters( 1, 1, 0, 0 );
 					this.updateCounters();
 				}.bind( this ), loadtime);
 			} else {
 				window.setTimeout(function() {
 					this.foitCard.classList.remove( foitClass );
 
-					this.foitRepaintCount++;
+					this._incrementCounters( 1, 0, 0, 0 );
 					this.updateCounters();
 				}.bind( this ), FoitFout.config.foitTimeout);
 
 				window.setTimeout(function() {
 					this.foitCard.classList.remove( fallbackClass );
 
-					this.foitRepaintCount++;
-					this.foitReflowCount++;
+					this._incrementCounters( 1, 1, 0, 0 );
 					this.updateCounters();
 				}.bind( this ), loadtime);
 			}
@@ -138,8 +170,7 @@
 			window.setTimeout(function() {
 				this.foutCard.classList.remove( fallbackClass );
 
-				this.foutRepaintCount++;
-				this.foutReflowCount++;
+				this._incrementCounters( 0, 0, 1, 1 );
 				this.updateCounters();
 			}.bind( this ), loadtime);
 		};
@@ -169,21 +200,30 @@
 			return rand - rand % 100;
 		};
 
+		FoitFout.prototype._isGroupedRepaints = function() {
+			return document.getElementById( "groupedrepaints").checked;
+		};
+
 		FoitFout.prototype.randomizeLoadTimes = function() {
-			document.getElementById( "loadtime-roman" ).value = this._random( 400, 8000 );
-			document.getElementById( "loadtime-bold" ).value = this._random( 400, 8000 );
-			document.getElementById( "loadtime-italic" ).value = this._random( 400, 8000 );
-			document.getElementById( "loadtime-bolditalic" ).value = this._random( 400, 8000 );
+			var randValue = this._random( 400, 8000 );
+			var grouped = this._isGroupedRepaints();
+
+			this.init();
+
+			this.loadTimeInputs.roman.value = randValue;
+			this.loadTimeInputs.bold.value = grouped ? randValue : this._random( 400, 8000 );
+			this.loadTimeInputs.italic.value = grouped ? randValue : this._random( 400, 8000 );
+			this.loadTimeInputs.bolditalic.value = grouped ? randValue : this._random( 400, 8000 );
 		};
 
 		FoitFout.prototype.disable = function() {
-			document.getElementById( "randomize" ).disabled = true;
-			document.getElementById( "startload" ).disabled = true;
+			this.randomizeButton.disabled = true;
+			this.submitButton.disabled = true;
 		};
 
 		FoitFout.prototype.enable = function() {
-			document.getElementById( "randomize" ).disabled = false;
-			document.getElementById( "startload" ).disabled = false;
+			this.randomizeButton.disabled = false;
+			this.submitButton.disabled = false;
 		};
 
 		var ff = new FoitFout();
