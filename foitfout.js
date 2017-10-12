@@ -42,6 +42,7 @@
 			this.foutRepaints = this.foutCard.previousElementSibling.querySelector( ".ff-card-repaints" );
 
 			this.randomizeButton = document.getElementById( "randomize" );
+			this.groupedButton = document.getElementById( "groupedrepaints" );
 			this.submitButton = document.getElementById( "startload" );
 
 			this.loadTimeInputs = {
@@ -200,29 +201,33 @@
 			return rand - rand % 100;
 		};
 
-		FoitFout.prototype._isGroupedRepaints = function() {
-			return document.getElementById( "groupedrepaints").checked;
+		FoitFout.prototype.matchLoadTimes = function() {
+			this.init();
+
+			var val = this.loadTimeInputs.roman.value;
+			this.loadTimeInputs.bold.value = val;
+			this.loadTimeInputs.italic.value = val;
+			this.loadTimeInputs.bolditalic.value = val;
 		};
 
 		FoitFout.prototype.randomizeLoadTimes = function() {
-			var randValue = this._random( 400, 8000 );
-			var grouped = this._isGroupedRepaints();
-
 			this.init();
 
-			this.loadTimeInputs.roman.value = randValue;
-			this.loadTimeInputs.bold.value = grouped ? randValue : this._random( 400, 8000 );
-			this.loadTimeInputs.italic.value = grouped ? randValue : this._random( 400, 8000 );
-			this.loadTimeInputs.bolditalic.value = grouped ? randValue : this._random( 400, 8000 );
+			this.loadTimeInputs.roman.value = this._random( 400, 8000 );
+			this.loadTimeInputs.bold.value = this._random( 400, 8000 );
+			this.loadTimeInputs.italic.value = this._random( 400, 8000 );
+			this.loadTimeInputs.bolditalic.value = this._random( 400, 8000 );
 		};
 
 		FoitFout.prototype.disable = function() {
 			this.randomizeButton.disabled = true;
+			this.groupedButton.disabled = true;
 			this.submitButton.disabled = true;
 		};
 
 		FoitFout.prototype.enable = function() {
 			this.randomizeButton.disabled = false;
+			this.groupedButton.disabled = false;
 			this.submitButton.disabled = false;
 		};
 
@@ -241,6 +246,11 @@
 			var randomizeEl = document.getElementById( "randomize" );
 			randomizeEl.addEventListener( "click", function( e ) {
 				ff.randomizeLoadTimes();
+			}, false );
+
+			var groupedEl = document.getElementById( "groupedrepaints");
+			groupedEl.addEventListener( "click", function( e ) {
+				ff.matchLoadTimes();
 			}, false );
 		});
 	})();

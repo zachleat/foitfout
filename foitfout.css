@@ -50,8 +50,11 @@ label:first-child {
 	padding-right: .5em;
 }
 label,
-button {
+button[type=submit] {
 	font-size: 1.125em; /* 18px /16 */
+}
+button[type=button] {
+	font-size: 1em; /* 16px /16 */
 }
 fieldset label {
 	display: inline-block;
@@ -65,6 +68,10 @@ input[type=number] {
 button,
 .buttons label {
 	margin-top: 0.2222222222222em; /* 4px /18 */
+}
+button {
+	float: left;
+	clear: left;
 }
 button[type=submit] {
 	margin-top: 0.8888888888889em; /* 16px /18 */
