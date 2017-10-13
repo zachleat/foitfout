@@ -1,6 +1,4 @@
 (function() {
-		document.documentElement.className += " js";
-
 		function FoitFout() {}
 
 		FoitFout.config = {
@@ -22,8 +20,14 @@
 			end: "ff-card-finish"
 		};
 
+		FoitFout.prototype.ctm = function() {
+			return "fonts" in document;
+		};
+
 		FoitFout.prototype.preload = function() {
-			if( "fonts" in document ) {
+			if( this.ctm() ) {
+				document.documentElement.classList.add( "js" );
+
 				Promise.all([
 					document.fonts.load("1em Open Sans"),
 					document.fonts.load("700 1em Open Sans"),
@@ -202,8 +206,6 @@
 		};
 
 		FoitFout.prototype.matchLoadTimes = function() {
-			this.init();
-
 			var val = this.loadTimeInputs.roman.value;
 			this.loadTimeInputs.bold.value = val;
 			this.loadTimeInputs.italic.value = val;
@@ -211,8 +213,6 @@
 		};
 
 		FoitFout.prototype.randomizeLoadTimes = function() {
-			this.init();
-
 			this.loadTimeInputs.roman.value = this._random( 400, 8000 );
 			this.loadTimeInputs.bold.value = this._random( 400, 8000 );
 			this.loadTimeInputs.italic.value = this._random( 400, 8000 );
@@ -235,6 +235,12 @@
 		ff.preload();
 
 		document.addEventListener( "DOMContentLoaded", function() {
+			ff.init();
+
+			if( !ff.ctm() ) {
+				ff.disable();
+			}
+
 			var formEl = document.getElementById( "timeout" );
 			formEl.addEventListener( "submit", function( e ) {
 				e.preventDefault();
