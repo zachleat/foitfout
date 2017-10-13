@@ -210,6 +210,8 @@
 			this.loadTimeInputs.bold.value = val;
 			this.loadTimeInputs.italic.value = val;
 			this.loadTimeInputs.bolditalic.value = val;
+
+			this.updateLoadTimesHash();
 		};
 
 		FoitFout.prototype.randomizeLoadTimes = function() {
@@ -217,6 +219,38 @@
 			this.loadTimeInputs.bold.value = this._random( 400, 8000 );
 			this.loadTimeInputs.italic.value = this._random( 400, 8000 );
 			this.loadTimeInputs.bolditalic.value = this._random( 400, 8000 );
+
+			this.updateLoadTimesHash();
+		};
+
+		FoitFout.prototype.updateLoadTimesHash = function() {
+			var times = [];
+			times.push( this.loadTimeInputs.roman.value );
+			times.push( this.loadTimeInputs.bold.value );
+			times.push( this.loadTimeInputs.italic.value );
+			times.push( this.loadTimeInputs.bolditalic.value );
+			window.location.replace( "#" + times.join( "," ) );
+		};
+
+		FoitFout.prototype.fetchUrlLoadTimes = function() {
+			var hash = window.location.hash;
+			hash = hash.substr( 1 );
+
+			if( hash ) {
+				var times = times = hash.split(",");
+				if( times[ 0 ] ) {
+					this.loadTimeInputs.roman.value = parseInt( times[ 0 ], 10 );
+				}
+				if( times[ 1 ] ) {
+					this.loadTimeInputs.bold.value = parseInt( times[ 1 ], 10 );
+				}
+				if( times[ 2 ] ) {
+					this.loadTimeInputs.italic.value = parseInt( times[ 2 ], 10 );
+				}
+				if( times[ 3 ] ) {
+					this.loadTimeInputs.bolditalic.value = parseInt( times[ 3 ], 10 );
+				}
+			}
 		};
 
 		FoitFout.prototype.disable = function() {
@@ -236,6 +270,7 @@
 
 		document.addEventListener( "DOMContentLoaded", function() {
 			ff.init();
+			ff.fetchUrlLoadTimes();
 
 			if( !ff.ctm() ) {
 				ff.disable();
@@ -245,6 +280,7 @@
 			formEl.addEventListener( "submit", function( e ) {
 				e.preventDefault();
 
+				ff.updateLoadTimesHash();
 				ff.reset();
 				ff.emulateLoad();
 			});
